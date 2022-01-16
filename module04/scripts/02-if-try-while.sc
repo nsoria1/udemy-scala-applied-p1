@@ -21,6 +21,13 @@ val fileName2 =
     "the finally block"
   }
 
+var y = 0
+
+while (y < 6) {
+  y += 1
+  println("Hello")
+}
+
 @tailrec
 def greet(n: Int, curr: Int = 0): Unit = {
   if (curr < n) {

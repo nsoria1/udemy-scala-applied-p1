@@ -6,6 +6,8 @@ import org.scalatest.Matchers
 import support.BlankValues._
 import support.KoanSuite
 import org.scalatest.SeveredStackTraces
+import scala.math.abs
+import scala.language.implicitConversions
 
 // Note, in the following exercise, to get the tests to even compile we had to
 // comment out the test code. You will need to uncomment it first, then write
@@ -29,8 +31,46 @@ class Module03 extends KoanSuite with Matchers with SeveredStackTraces {
   // The tests below should exercise all of these requirements although they
   // are far from exhaustive
 
+  class ComplexNum (val real: Double, val imaginary: Double) {
+
+    def printLeg(): String = {
+      if (imaginary < 0) {
+        val abs_imaginary = imaginary.abs
+        val str = s"$real - $abs_imaginary" + "i"
+        str
+      } else {
+        val str = s"$real + $imaginary" + "i"
+        str
+      }
+    }
+
+    // override def toString: String = s"$real + $imaginary" + "i"
+    override def toString: String =  this.printLeg()
+
+    // In case a single double is provided, auxiliary method
+    def this(real: Double) = {
+      this(real, 0)
+    }
+
+    // Method for adding two ComplexNums
+    def +(other: ComplexNum): ComplexNum =
+      new ComplexNum(
+        this.real + other.real, this.imaginary + other.imaginary
+      )
+
+    // Method to add a double to a ComplexNum
+    def +(other: Double): ComplexNum =
+      new ComplexNum(
+        this.real + other, this.imaginary
+      )
+  }
+
+  object ComplexNum {
+    implicit def doubleToComplex(d: Double): ComplexNum = new ComplexNum(d)
+  }
+
   // UNCOMMENT BELOW
-  /* test ("Create a new Complex number and check the values for the real/imaginary parts") {
+   test ("Create a new Complex number and check the values for the real/imaginary parts") {
     val complex = new ComplexNum(4, 2)
 
     complex.real should be (4)
@@ -73,33 +113,39 @@ class Module03 extends KoanSuite with Matchers with SeveredStackTraces {
 
     complex.real should be (12)
     complex.imaginary should be (3.2)
-  } */
+  }
 
   // Extra credit - numbers with a negative imaginary part should be output
   // as 6.0 - 5.0i instead of 6.0 + -5.0i - if you have time, write a new test
   // for this outcome, and then adapt the toString in the class to work correctly
   // Hint: scala.math.abs will give the absolute value of a double
 
+  test ("Output negative imaginary number") {
+    val complex = new ComplexNum(6, -5)
+
+    complex.toString should be ("6.0 - 5.0i")
+  }
+
   // UNCOMMENT BELOW
-  /* test ("Format for negative imaginary part should be R.R - I.Ii") {
+   test ("Format for negative imaginary part should be R.R - I.Ii") {
     val complex = new ComplexNum(5, -6)
     val complex2 = new ComplexNum(5.5, -6.6)
 
     complex.toString should be ("5.0 - 6.0i")
     complex2.toString should be ("5.5 - 6.6i")
-  } */
+  }
 
   // Extra extra credit - adding a double to a complex works, but adding a complex
   // to a double does not. If you add an implicit conversion you can make this work
   // if you have time, write a test, and add an implicit to make it work
 
   // UNCOMMENT BELOW
-  /* test ("Add a complex to a double") {
+   test ("Add a complex to a double") {
     val complex = 5.6 + new ComplexNum(3.4, 4.5)
 
     complex.real should be (9)
     complex.imaginary should be (4.5)
-  } */
+  }
 
 
   // Extra, extra, extra credit, add a companion object and factory methods,

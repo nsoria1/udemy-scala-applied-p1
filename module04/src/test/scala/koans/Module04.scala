@@ -6,7 +6,10 @@ import org.scalatest.Matchers
 import org.scalatest.SeveredStackTraces
 import support.BlankValues._
 import support.KoanSuite
+import scala.io.Source
+
 import java.io.{BufferedReader, FileReader}
+import scala.annotation.tailrec
 
 class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
 
@@ -17,13 +20,20 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     //
     // Hint: maybe recursion? List.head will give you the first value, List.tail will give you the rest
 
-    def max(numbers : List[Int]) = {
+/*    def max(numbers : List[Int]) = {
       var maxSoFar = Int.MinValue
 
       for (n <- numbers) {
         if (n > maxSoFar) maxSoFar = n
       }
       maxSoFar
+    }*/
+
+    def max(numbers : List[Int]): Int = {
+      if (numbers == Nil) Int.MinValue
+      else {
+        if (numbers.head > max(numbers.tail)) numbers.head else max(numbers.tail)
+      }
     }
 
     max(List(1, 2, 3, 4, 5)) should be (5)
@@ -37,10 +47,11 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
   // using a for to filter out all files with the .shkspr extension and return a list of their filenames
   // so that the tests below are satisfied
   def listShakespeareFiles(dirPath: String) : Array[String] = {
-    val fileList = (new java.io.File(dirPath)).listFiles
+    // val fileList = (new java.io.File(dirPath)).listFiles
 
     // you need to replace this line with the real implementation
-    new Array[String](0)
+    // new Array[String](0)
+    new java.io.File(".").list.filter(file => file.endsWith(".shkspr"))
   }
   // question: can you guess why we define this method outside of the test below?
 
@@ -57,7 +68,13 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
   // what you need
   def firstLineOfFile(filePath: String) : String = {
     // replace with the real implementation
-    ""
+    val firstLine = {
+      val src = Source.fromFile("./" + filePath)
+      val line = src.getLines().take(1).toList.toList.mkString("")
+      src.close
+      line
+    }
+    firstLine
   }
 
   test ("First line of file") {
@@ -73,8 +90,10 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
   // finish this method so that the string is first trimmed (get rid of leading and trailing space)
   // and then the last character is matched to either a '?' ("Question") or anything else ("Statement")
   // so that the test below passes
-  def statementOrQuestion(str : String) : String = 
-    str
+  def statementOrQuestion(str : String) : String = {
+    val res = if (str.trim.last == '?') "Question" else "Statement"
+    res
+  }
 
   test ("statement or question?") {
     statementOrQuestion("hello") should be ("Statement")
@@ -83,6 +102,8 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     statementOrQuestion("  hello?") should be ("Question")
     statementOrQuestion("hello? ") should be ("Question")
   }
+
+
 
   // extra credit
   test ("shakespeare files contain question or statement?") {
@@ -98,7 +119,12 @@ class Module04 extends KoanSuite with Matchers with SeveredStackTraces {
     // extra extra credit - can you find a way to do it without using either a var or a mutable Map?
     //var shksprMap = new scala.collection.immutable.HashMap[String, String]
 
-    val shksprMap = new scala.collection.immutable.HashMap[String, String]
+    val shksprMap = {
+      for {
+        file <- listShakespeareFiles(".")
+        which = statementOrQuestion(firstLineOfFile(file))
+      } yield file -> which
+    }.toMap
 
     shksprMap("caesar.shkspr") should be ("Statement")
     shksprMap("romeo.shkspr") should be ("Question")

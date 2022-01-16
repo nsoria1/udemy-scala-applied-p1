@@ -100,4 +100,8 @@
       </library>
     </orderEntry>
   </component>
+  <component name="SbtModule">
+    <option name="buildForURI" value="file:$MODULE_DIR$/../../" />
+    <option name="imports" value="SUB:DOLLAR23cbe0278e0b1b3aae75.`module01`, SUB:DOLLAR23cbe0278e0b1b3aae75.`module02`, SUB:DOLLAR23cbe0278e0b1b3aae75.`module03`, SUB:DOLLAR23cbe0278e0b1b3aae75.`module04`, SUB:DOLLAR23cbe0278e0b1b3aae75.`module05`, SUB:DOLLAR23cbe0278e0b1b3aae75.`module06`, _root_.sbt.Keys._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
+  </component>
 </module>
