@@ -33,3 +33,5 @@ force(acceleration = gravity / 13.0, mass = 100)
 def factSeq(n: Int, acc: List[Long] = List(1L), ct: Int = 2): List[Long] = {
   if (ct > n) acc else factSeq(n, acc = ct * acc.head :: acc, ct = ct + 1)
 }
+
+factSeq(2)

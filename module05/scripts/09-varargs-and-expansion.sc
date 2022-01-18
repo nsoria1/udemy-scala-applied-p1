@@ -10,7 +10,6 @@ sayHello()
 sayHello("Fred")
 sayHello("Fred", "Julie", "Kim")
 
-
 def greet(greeting: String, names: String*): Seq[String] = {
   for (name <- names) yield s"$greeting $name"
 }

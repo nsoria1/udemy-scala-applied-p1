@@ -1,7 +1,7 @@
 import java.io.File
 import scala.io.Source
 
-def withFileContents[A](file: File, fn: String => A, default: A): A = {
+def withFileContents[A](file: File, fn: String => A): A = {
   val source = Source.fromFile(file)
 
   try {
